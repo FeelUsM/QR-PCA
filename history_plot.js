@@ -1,4 +1,4 @@
-export function render({ model, el }) {
+function render({ model, el }) {
 	// история хранится ЗДЕСЬ, только фронтенд
 	let hist = [];
 	let mni = [], mxi = []; // очередь индексов убывающих / увеличивающихся элементов
@@ -134,3 +134,4 @@ export function render({ model, el }) {
 	// начальная отрисовка (пустая)
 	redraw();
 }
+export default { render }

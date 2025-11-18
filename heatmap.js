@@ -1,4 +1,4 @@
-export function render({ model, el }) {
+function render({ model, el }) {
 	// canvas
 	const canvas = document.createElement("canvas");
 	el.appendChild(canvas);
@@ -66,3 +66,4 @@ export function render({ model, el }) {
 	model.on("change:cell_size", redraw);
 	model.on("change:colormap", redraw);
 }
+export default { render }

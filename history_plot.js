@@ -51,6 +51,7 @@ function render({ model, el }) {
 	const statsDiv = document.createElement("div");
 	statsDiv.style.whiteSpace = "pre";
 	statsDiv.style.marginRight = "10px";
+	statsDiv.style.width = "100px";
 	statsDiv.style.fontFamily = "monospace";
 	statsDiv.style.fontSize = "14px";
 	root.appendChild(statsDiv);
@@ -75,8 +76,9 @@ function render({ model, el }) {
 		ctx.fillStyle = "white";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-		if (hist.length === 0) {
-            statsDiv.textContent = "";
+		const title = model.get("title");
+    	if (hist.length === 0) {
+	        statsDiv.textContent = `${title}`;
             return;
         }
 
@@ -85,7 +87,7 @@ function render({ model, el }) {
 		let mx = hist[mxi[0]-shi].y
 		let logmode = model.get("logmode");
 		if (logmode && mn<=0) logmode = false;
-		statsDiv.textContent = logmode ? `${mx.toPrecision(4)}\n${mn.toPrecision(4)}\nlog` : `${mx.toPrecision(4)}\n${mn.toPrecision(4)}`; // todo format
+		statsDiv.textContent = `${title}\n${mx.toPrecision(4)}\n${mn.toPrecision(4)}` + (logmode ? '\nlog': '')
 		if (logmode) {
 			mn = Math.log(mn)
 			mx = Math.log(mx)

@@ -85,7 +85,7 @@ function render({ model, el }) {
 				const code = s.charCodeAt(idx) - 100;
 				const [r, g, b] = interpolateColor(code, cmap).map(v => Math.round(v));
 				ctx.fillStyle = `rgb(${r},${g},${b})`;
-				ctx.fillRect(x * sz, y * sz, sz, sz);
+				ctx.fillRect(x * sz, H - y * sz - sz, sz, sz);
 			}
 		}
 	};

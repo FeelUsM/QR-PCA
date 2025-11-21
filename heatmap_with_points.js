@@ -61,13 +61,19 @@ function render({ model, el }) {
 		}
 	}
 
-	function redrawHeatmap() {
+	async function redrawHeatmap() {
 		//console.log('redrawHeatmap')
 		const h = model.get("height");
 		const w = model.get("width");
 		const sz = model.get("cell_size");
-		const s = atob(model.get("_data"));
 		const cmap = model.get("colormap");
+
+		const compressed = Uint8Array.from(atob(model.get("_data")), c => c.charCodeAt(0));
+		const cs = new DecompressionStream("deflate");
+		const writer = cs.writable.getWriter();
+		writer.write(compressed);
+		writer.close();
+		const s = new Uint8Array(await new Response(cs.readable).arrayBuffer());
 
 		const W = w * sz;
 		const H = h * sz;
@@ -82,7 +88,7 @@ function render({ model, el }) {
 		for (let y = 0; y < h; y++) {
 			for (let x = 0; x < w; x++) {
 				const idx = y * w + x;
-				const code = s.charCodeAt(idx) //- 100;
+				const code = s[idx] //- 100;
 				const [r, g, b] = interpolateColor(code, cmap).map(v => Math.round(v));
 				ctx.fillStyle = `rgb(${r},${g},${b})`;
 				ctx.fillRect(x * sz, H - y * sz - sz, sz, sz);

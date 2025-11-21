@@ -32,7 +32,7 @@ function render({ model, el }) {
 		const h = model.get("height");
 		const w = model.get("width");
 		const sz = model.get("cell_size");
-		const s = model.get("_data");
+		const s = atob(model.get("_data"));
 		const cmap = model.get("colormap");
 
 		canvas.width = w * sz;
@@ -47,7 +47,7 @@ function render({ model, el }) {
 		for (let y = 0; y < h; y++) {
 			for (let x = 0; x < w; x++) {
 				const idx = y * w + x;
-				const code = s.charCodeAt(idx) - 100; // 0..255
+				const code = s.charCodeAt(idx) //- 100; // 0..255
 				const [r, g, b] = interpolateColor(code, cmap).map(v => Math.round(v));
 				ctx.fillStyle = `rgb(${r},${g},${b})`;
 				ctx.fillRect(x * sz, canvas.height - y * sz - sz, sz, sz);

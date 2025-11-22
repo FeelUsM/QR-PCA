@@ -32,9 +32,9 @@ function render({ model, el }) {
 		const h = model.get("height");
 		const w = model.get("width");
 		const sz = model.get("cell_size");
-		const compressed = Uint8Array.from(atob(model.get("_data")), c => c.charCodeAt(0));
 		const cmap = model.get("colormap");
 
+		const compressed = Uint8Array.from(atob(model.get("_data")), c => c.charCodeAt(0));
 		const cs = new DecompressionStream("deflate");
 		const writer = cs.writable.getWriter();
 		writer.write(compressed);

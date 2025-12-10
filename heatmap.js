@@ -2,6 +2,43 @@ function render({ model, el }) {
 	// canvas
 	const canvas = document.createElement("canvas");
 	el.appendChild(canvas);
+	const text_el = document.createElement("div");
+	text_el.style.pointerEvents = "none"; /* не мешает событиям мыши */
+
+	text_el.style.whiteSpace = "pre"; /* сохраняем перенос строки */
+	text_el.style.fontFamily = "monospace";
+	text_el.style.fontSize = "12px";
+	text_el.style.color = "#000";
+	text_el.style.textShadow = "0 0 4px rgb(255,255,255)";
+
+	text_el.style.display = "none"; /* показываем только при наведении */
+	text_el.style.fontWeight = "bold";
+	text_el.style.top = 0;
+	text_el.style.left = 0;
+
+	text_el.style.position = "absolute";
+	text_el.style.zIndex = "2147483647";
+
+
+	el.appendChild(text_el);
+
+
+	// Показываем/скрываем text_el и позиционируем его при движении мыши над canvas
+	canvas.addEventListener('mousemove', (e) => {
+		// позиция рядом с курсором (используем pageX/Y чтобы учесть прокрутку)
+		const rect = el.getBoundingClientRect();
+		text_el.style.transform = `translate(${e.clientX - rect.left + 10}px, ${e.clientY - rect.top + 10}px)`
+	});
+
+	canvas.addEventListener('mouseenter', () => {
+		text_el.style.display = 'block';
+	});
+
+	canvas.addEventListener('mouseleave', () => {
+		text_el.style.display = 'none';
+	});
+
+
 	const ctx = canvas.getContext("2d");
 
 	function lerp(a, b, t) {
@@ -33,6 +70,7 @@ function render({ model, el }) {
 		const w = model.get("width");
 		const sz = model.get("cell_size");
 		const cmap = model.get("colormap");
+		text_el.textContent = model.get("text");
 
 		const compressed = Uint8Array.from(atob(model.get("_data")), c => c.charCodeAt(0));
 		const cs = new DecompressionStream("deflate");
